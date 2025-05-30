@@ -14,7 +14,6 @@ from neurodsp import sim, plts, filt, spectral, timefrequency, utils
 from prophecy_functions import *
 
 save_path = '/labs/bvoyteklab/Smith/prophecy/02-results/permut/n_1000_pvals/'
-#save_path = '/Users/sydneysmith/Projects/PrOPHEcy/PrOPHEcy/03-results/ieeg/cluster_test/'
 
 # PERMUTATION SETTINGS
 N_RUNS = 1000

@@ -1,4 +1,4 @@
-"""MAIN prophecy analysis simulating hypothesized LPFs and comparing to raw iEEG data"""
+"""MAIN prophecy analysis simulating hypothesized LPFs and comparing to raw sEEG data"""
 
 # Import necessary modules
 import numpy as np
@@ -15,10 +15,9 @@ from neurodsp import sim, plts, filt, spectral, timefrequency, utils
 from prophecy_functions import *
 
 save_path = '/labs/bvoyteklab/Smith/prophecy/02-results/main/'
-#save_path = '/Users/sydneysmith/Projects/PrOPHEcy/PrOPHEcy/03-results/ieeg/cluster_test/TIMING/'
 
 similarity_metrics = ['r', 'rho'] # pearson, spearman
-compared_sigs = ['top', 'btm', 'comb', 'SAM_y', 'SAM_e', 'SAM_i'] # top-down, bottom-up, combined, SAM module
+compared_sigs = ['top', 'btm', 'comb', 'SAM_y', 'SAM_e', 'SAM_i'] # top-down, bottom-up, combined, SAM_y, SAM_u (excitatory), SAM_v (inhibitory)
 freq_ranges = ['raw']
 
 
@@ -54,8 +53,8 @@ for subj in subjs:
         trial_length = epoch_trial_data.shape[1] # total length of trial in ms
 
         # define start & end of segment
-        tmin = 700 # WHAT IS THIS?
-        tmax = int(700 + trial_info['SOA']*trial_info['Condition'] + trial_info['SOA Jitter'] + 400) # WHERE DO 700 AND 400 COME FROM???
+        tmin = 700 # 700ms before first tone onset,
+        tmax = int(700 + trial_info['SOA']*trial_info['Condition'] + trial_info['SOA Jitter'] + 400)  #400ms after target  offset
 
 
         # simulate top-down, bottom-up, & combined LFP model
@@ -89,29 +88,15 @@ for subj in subjs:
             for sig in eeg_sigs:
                 resamp_eeg_sigs.append(signal.resample(sig, n_samples))
 
-            # SANITY CHECK PLOT
-            # if i==0 and trial==2:
-            #     plt.figure(figsize=(15,5))
-            #     plt.plot(resamp_eeg_sigs[0], label='ieeg')
-            #     plt.plot(resamp_sim_sigs_raw[0], label='top-down', alpha=0.5)
-            #     plt.plot(resamp_sim_sigs_raw[1], label='bottom-up', alpha=0.5)
-            #     plt.plot(resamp_sim_sigs_raw[2], label='combined', alpha=0.5)
-            #     plt.plot(resamp_sim_sigs_raw[3], label='SAM_y', alpha=0.5)
-            #     plt.plot(resamp_sim_sigs_raw[4], label='SAM_e', alpha=0.5)
-            #     plt.plot(resamp_sim_sigs_raw[5], label='SAM_i', alpha=0.5)
-            #     plt.legend()
-            #     plt.savefig('/Users/sydneysmith/Projects/PrOPHEcy/PrOPHEcy/03-results/ieeg/model_comparison/subj_'+subj+'sanity_check.pdf')
-
 
             # compute similarity metrics RAW
             for sim_sig in resamp_sim_sigs_raw: # raw simulated sigs (top_down, bottom_up, combined, SAM_y, SAM_e, SAM_i)
                 eeg_sig = resamp_eeg_sigs[0]
                 r_val = compute_r(sim_sig, eeg_sig)
                 rho_val = compute_rho(sim_sig, eeg_sig)
-                #euc_val = compute_euc(sim_sig, eeg_sig)
-
+            
                 # add to list of metrics for this channel
-                similarity_vals_chan_list.extend([r_val, rho_val])#, euc_val])
+                similarity_vals_chan_list.extend([r_val, rho_val])
 
 
             similarity_vals_trial_array[i,:] = np.asarray(similarity_vals_chan_list)
@@ -129,4 +114,4 @@ for subj in subjs:
     print('saving...')
 
 
-    similarity_df_all_trials.to_csv(save_path+'subj_'+subj+'_model_comparisonTIMING.csv')
+    similarity_df_all_trials.to_csv(save_path+'subj_'+subj+'_model_comparison.csv')
