@@ -30,7 +30,7 @@ git clone https://github.com/voytekresearch/prophecy.git
 ```
 
 ```
-pip install -r requirments.txt
+pip install -r requirements.txt
 ```
 
 Installation with a [conda environment](https://docs.conda.io/projects/conda/en/stable/user-guide/tasks/manage-environments.html) is highly recommended. Typical install time should be <5 minutes.
