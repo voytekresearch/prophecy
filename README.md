@@ -13,7 +13,7 @@ It has the following required dependences:
 - mne-bids
 - neurodsp
 
-The accompanying jupyter notebooks are used for visualization and statistical analysis and have the following dependences:
+The accompanying jupyter notebooks are used for visualization and statistical analysis and have the following additional dependences:
 - matplotlib
 - seaborn
 - pingouin
